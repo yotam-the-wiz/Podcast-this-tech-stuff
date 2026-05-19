@@ -1,0 +1,6 @@
+# Generated episodes / scratch
+*.m4a
+*.aiff
+*.wav
+/tmp/
+.DS_Store
