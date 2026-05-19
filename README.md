@@ -1,86 +1,92 @@
-# podcast-this-tech-stuff
+<p align="center">
+  <img src="assets/banner.svg" alt="podcast-this-tech-stuff — turn any technical doc into a two-host podcast" width="100%">
+</p>
 
-Turn any technical document into a concise **10–20 minute, two-host audio
-podcast** a non-technical listener can follow on the go.
+<p align="center">
+  <a href="SKILL.md"><img src="https://img.shields.io/badge/Claude%20Code-Skill-8b5cf6" alt="Claude Code Skill"></a>
+  <img src="https://img.shields.io/badge/engine-NotebookLM-22d3ee" alt="NotebookLM">
+  <img src="https://img.shields.io/badge/fallback-offline%20say-blueviolet" alt="Offline fallback">
+  <img src="https://img.shields.io/badge/platform-macOS-lightgrey" alt="macOS">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-green" alt="MIT License"></a>
+</p>
 
-Feed it a PDF, slide/diagram PNGs, plain text, or a Google Doc. It asks a few
-quick questions to calibrate to *your* background, then produces a fast-paced
-two-host episode that explains the main ideas, briefly defines each key term the
-first time it comes up, and gets you to "I get what's going on" — without the
-lecture.
+<h1 align="center">podcast-this-tech-stuff</h1>
 
-This is a [Claude Code](https://claude.com/claude-code) **agent skill**.
+<p align="center">
+  <b>Feed it a dense spec, PRD, paper, or diagram.<br>
+  Get back a tight 10–20 min two-host podcast you can actually follow on the commute.</b>
+</p>
 
-## What it does
+---
 
-1. **Collects your source(s)** — PDF, PNG/diagram, `.txt`/`.md`, a Google Doc
-   URL, or pasted text. Multiple sources get woven into one narrative.
-2. **Calibrates the listener** — a single set of quick questions: how technical
-   is the audience, how long should it run, any other sources or focus angle.
-3. **Builds a brief** from your answers that drives the generation.
-4. **Generates the episode** with Google **NotebookLM** (best free voice
-   quality), driven automatically in your own Chrome.
-5. **Files the result** — a `.m4a` lands in `~/doc2podcast/episodes/`, revealed
-   in Finder with its duration.
+## Why
 
-If NotebookLM is unreachable (offline, blocked), it falls back to a local
-macOS `say`-based pipeline — lower quality, but works without internet.
+Technical docs don't fit into a walk, a drive, or a workout. Reading-aloud tools
+are robotic and lecture-y. This skill turns **any** technical source into a
+fast-paced, two-host conversation — calibrated to *your* background — so you go
+from "I should read that" to "I get what's going on" without sitting at a screen.
+
+- 📄 **Any source** — PDF, slide/diagram PNGs, plain text, or a Google Doc. Mix several into one episode.
+- 🎚️ **Calibrated to the listener** — a few quick questions tune the depth, pace, and length.
+- 🗣️ **Two-host, not read-aloud** — a curious host + an expert, key terms briefly defined then onward.
+- 🎧 **High-quality voices** — Google NotebookLM, driven automatically in your own Chrome.
+- 🛟 **Works offline** — local macOS `say` fallback when NotebookLM is unreachable.
+- 📁 **Just appears** — finished `.m4a` lands in `~/doc2podcast/episodes/` and opens in Finder.
+
+## How it works
+
+```
+source doc(s)  ─►  3 quick questions  ─►  tailored brief  ─►  NotebookLM  ─►  episode.m4a
+                                                              (offline ▸ local say fallback)
+```
+
+1. **Collect** the source(s) — path, link, or pasted text. Multiple sources are encouraged; they make a richer episode.
+2. **Calibrate** — one prompt: how technical is the listener, how long, any extra sources or focus angle.
+3. **Brief** — the answers fill a brief that steers generation.
+4. **Generate** — NotebookLM produces the episode; the skill polls in the background and pings you when it's done (~5–20 min).
+5. **File it** — slugified `.m4a` in `~/doc2podcast/episodes/`, revealed in Finder with its duration.
 
 ## Requirements
 
-- **Claude Code** (the CLI/agent that runs skills).
-- **macOS** — the offline fallback uses the built-in `say` voices and `afinfo`.
-- **Google Chrome**, logged in to a Google account with **NotebookLM** access
-  (for the primary, high-quality path).
-- **[browser-harness](https://github.com/browser-use/browser-use)** — the
-  CDP-based browser-control helper the skill uses to drive NotebookLM in your
-  Chrome. Must be installed and on `$PATH`.
-- **Python 3** — for the local fallback pipeline.
-
-The high-quality path needs a working NotebookLM login in your Chrome. If the
-skill hits a Google login wall it will stop and ask you rather than enter
-credentials.
+| Requirement | Why |
+|---|---|
+| [Claude Code](https://claude.com/claude-code) | Runs the skill. |
+| macOS | Offline fallback uses built-in `say` voices and `afinfo`. |
+| Google Chrome + NotebookLM access | Primary high-quality path; the skill drives NotebookLM in your own Chrome. Hits a login wall → it stops and asks, never types credentials. |
+| `browser-harness` on `$PATH` | CDP browser-control helper used to drive NotebookLM. (Author's setup is a private local tool — swap in your own browser automation if you don't have it; the offline fallback needs none of this.) |
+| Python 3 | Offline `say` pipeline. |
 
 ## Install
 
-Drop this directory into your Claude Code skills folder so it's discoverable:
-
 ```bash
-git clone <this-repo-url> ~/.claude/skills/podcast-this-tech-stuff
+git clone git@github.com:yotam-the-wiz/Podcast-this-tech-stuff.git \
+  ~/.claude/skills/podcast-this-tech-stuff
 ```
 
-(Or copy the folder there manually.) Claude Code picks up the skill from its
-`SKILL.md` automatically — no extra registration step.
+Claude Code discovers the skill from [`SKILL.md`](SKILL.md) automatically — no
+registration step. The skill directory **must** be named
+`podcast-this-tech-stuff` (it's referenced by the fallback script path).
 
 ## Usage
 
-In Claude Code, just ask in natural language. Triggers include:
+Just ask Claude Code in natural language, with a doc attached or a path/link:
 
-- "podcast this" (with a doc attached or path/link given)
-- "turn this spec/PRD/design doc/paper into audio"
-- "I want to listen to this on my commute"
-- "make this technical doc digestible for a non-technical person"
+> "podcast this" · "turn this RFC into audio for my commute" ·
+> "make this design doc digestible for a non-technical person"
 
-The skill will ask you a few calibration questions, then generate. NotebookLM
-generation takes roughly 5–20 minutes; the skill polls in the background and
-notifies you when the episode is ready — you don't have to wait around.
+It asks the calibration questions, generates, and notifies you when the episode
+is ready — no waiting around.
 
-### Output
+## Repo layout
 
-- All episodes land in `~/doc2podcast/episodes/`.
-- Files are named from the source title, slugified
-  (e.g. `auth-rewrite-rfc.m4a`).
-- The skill ends by revealing the file in Finder and stating its length.
-
-## Project layout
-
-| File | Purpose |
+| Path | Purpose |
 |---|---|
-| `SKILL.md` | The skill definition Claude Code loads — workflow, calibration questions, style defaults. |
-| `REFERENCE.md` | Field-tested playbook for driving NotebookLM via browser-harness (selectors, gotchas). |
-| `scripts/poll_notebooklm.sh` | Background poller that waits for NotebookLM generation to finish. |
-| `scripts/local_fallback.py` | Offline two-host `say` pipeline (voices A/B, stitches, writes the `.m4a`). |
+| [`SKILL.md`](SKILL.md) | **The skill** — workflow, calibration questions, style defaults. The file Claude Code loads. |
+| [`REFERENCE.md`](REFERENCE.md) | Field-tested playbook for driving NotebookLM via browser-harness (selectors, gotchas). |
+| `scripts/poll_notebooklm.sh` | Background poller that waits out NotebookLM generation. |
+| `scripts/local_fallback.py` | Offline two-host `say` pipeline (voices A/B, stitch, write `.m4a`). |
+| `assets/banner.svg` | Repo banner. |
 
 ## License
 
-MIT — see `LICENSE`.
+[MIT](LICENSE) © 2026 Yotam Reis
