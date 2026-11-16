@@ -53,7 +53,7 @@ source doc(s)  ─►  3 quick questions  ─►  tailored brief  ─►  Notebo
 | [Claude Code](https://claude.com/claude-code) | Runs the skill. |
 | macOS | Offline fallback uses built-in `say` voices and `afinfo`. |
 | Google Chrome + NotebookLM access | Primary high-quality path; the skill drives NotebookLM in your own Chrome. Hits a login wall → it stops and asks, never types credentials. |
-| `browser-harness` on `$PATH` | CDP browser-control helper used to drive NotebookLM. (Author's setup is a private local tool — swap in your own browser automation if you don't have it; the offline fallback needs none of this.) |
+| `browser-harness` on `$PATH` | CDP browser-control helper used to drive NotebookLM. ([browser-use/browser-harness](https://github.com/browser-use/browser-harness); any browser automation works, and the offline fallback needs none of this.) |
 | Python 3 | Offline `say` pipeline. |
 
 ## Install
@@ -64,8 +64,7 @@ git clone git@github.com:yotam-the-wiz/Podcast-this-tech-stuff.git \
 ```
 
 Claude Code discovers the skill from [`SKILL.md`](SKILL.md) automatically — no
-registration step. The skill directory **must** be named
-`podcast-this-tech-stuff` (it's referenced by the fallback script path).
+registration step.
 
 ## Usage
 

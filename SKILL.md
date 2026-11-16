@@ -62,12 +62,15 @@ COVERAGE: Cover every source provided; weave them into one narrative.
 
 ## Step 4 — Primary engine: NotebookLM (best quality)
 
-Drive NotebookLM in the user's Chrome via `browser-harness`. Full click-by-click
+Drive NotebookLM in the user's Chrome via `browser-harness`
+(https://github.com/browser-use/browser-harness). If it is not installed, use
+whatever browser-control tool the agent has, or go straight to Step 5. Full click-by-click
 playbook, selectors, and gotchas are in **[REFERENCE.md](REFERENCE.md)** — read it
 before driving. High level:
 
-1. `new_tab("https://notebooklm.google.com/")` → confirm logged in (user is
-   `yotam@trysidequest.ai`). If bounced to a login wall, **stop and ask**.
+1. `new_tab("https://notebooklm.google.com/")` → confirm the user is logged in
+   to their Google account. If bounced to a login wall, **stop and ask** the
+   user to sign in; never type credentials.
 2. Use a **fresh notebook per episode** ("Create notebook"; don't reuse a stale
    one). Add **all** gathered sources into this one notebook — Drive picker for
    Google Docs, Upload files for local PDF/PNG/text, Copied text for pasted
@@ -89,7 +92,7 @@ and text — and **write the two-host script yourself**, obeying the Step 3 brie
 (speaker lines prefixed `A:` / `B:`). Then:
 
 ```
-python3 ~/.claude/skills/podcast-this-tech-stuff/scripts/local_fallback.py \
+python3 <this skill's directory>/scripts/local_fallback.py \
   <script.txt> "<episode-slug>"
 ```
 
