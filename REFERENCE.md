@@ -114,7 +114,7 @@ Generation took ~15 min in testing; allow up to ~20. Run the poller in the
 or proactively re-check:
 
 ```
-~/.claude/skills/podcast-this-tech-stuff/scripts/poll_notebooklm.sh
+<this skill's directory>/scripts/poll_notebooklm.sh
 ```
 
 (run it with the background runner). It exits when the "Generating Audio
